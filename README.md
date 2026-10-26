@@ -149,11 +149,31 @@ ExtEntraPkce.dll
 
 Run every step in an **elevated PowerShell 7** session.
 
-`Register-WebPortEntraApp.ps1` and `Install-EntraModule.ps1` print a plan before they change anything. The plan lists the Entra settings, the SQLite values (current → new), the files and configuration keys, the backup location, and whether WebPort is stopped and started, as a service or as a program. Add `-WhatIf` to see the plan without changing anything.
+Both scripts start by printing what they are going to change:
+
+- the settings of the app in Entra (`Register-WebPortEntraApp.ps1`);
+- each SQLite setting, with its current and new value;
+- the files and the `WebPortServer.exe.config` entries (`Install-EntraModule.ps1`);
+- where the backup is saved;
+- whether WebPort is stopped and started again, as a service or as a program.
+
+The scripts do not wait for approval: the changes follow directly. To review first, run with `-WhatIf`, which prints the list and stops without changing anything. Or add `-Confirm`, and the script asks before it makes any change.
 
 ### 1. Get the server package
 
-Copy the three files from this repository to one folder on the server.
+Download the three files to one folder on the server, for example `C:\script`:
+
+```powershell
+New-Item -ItemType Directory -Path C:\script -Force | Out-Null
+cd C:\script
+$base = 'https://raw.githubusercontent.com/demesg/WebPortSSO/main'
+foreach ($file in 'Register-WebPortEntraApp.ps1','Install-EntraModule.ps1','ExtEntraPkce.dll') {
+    Invoke-WebRequest -Uri "$base/$file" -OutFile $file
+}
+Unblock-File -Path .\*.ps1, .\ExtEntraPkce.dll
+```
+
+`Unblock-File` removes the "downloaded from the internet" mark, so that PowerShell's execution policy does not stop the scripts. Run the remaining steps from the same folder.
 
 ### 2. Register the Entra application
 

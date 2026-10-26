@@ -1,6 +1,6 @@
 # WebPort: Entra-SSO
 
-Microsoft Entra ID sign-in for WebPort, implemented as a WebPort add-on (`ExtEntraPkce.dll`) using the authorization code flow with PKCE and a confidential client.
+Microsoft Entra ID sign-in for WebPort, implemented as a WebPort add-on (`ExtEntraPkce.dll`) using the authorization code flow with PKCE and a confidential client. The add-on makes WebPort's **Login with Microsoft 365** button sign users in directly against your own Entra tenant, without the need for Kiona Identity.
 
 The add-on serves `/entra/login` and takes over WebPort's `/access/loginsso` callback. Settings and the encrypted client secret are stored in WebPort's own SQLite database, and sign-in events in the Windows event log. Entra app roles (`WebPort.View`, `WebPort.Admin`, …) map to WebPort's global permission levels.
 
